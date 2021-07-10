@@ -1,0 +1,4 @@
+include ':app'
+include ':streamaxia-opensdk'
+include ':fu_ui'
+rootProject.name='Kotlin_FaceUnity_Demo'

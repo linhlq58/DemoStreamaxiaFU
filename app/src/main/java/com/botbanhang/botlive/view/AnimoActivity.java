@@ -1,0 +1,75 @@
+package com.botbanhang.botlive.view;
+
+import android.view.MotionEvent;
+
+import com.botbanhang.botlive.base.BaseFaceUnityActivity;
+import com.botbanhang.botlive.data.AnimojiDataFactory;
+import com.botbanhang.botlive.R;
+import com.botbanhang.botlive.entity.FunctionEnum;
+import com.faceunity.ui.control.AnimojiControlView;
+
+/**
+ * DESC：
+ * Created on 2021/3/3
+ */
+public class AnimoActivity extends BaseFaceUnityActivity {
+
+    private AnimojiDataFactory mAnimojiDataFactory;
+    private AnimojiControlView mAnimojiControlView;
+
+    @Override
+    protected int getStubBottomLayoutResID() {
+        return R.layout.layout_control_animo;
+    }
+
+    @Override
+    public void initData() {
+        super.initData();
+        mAnimojiDataFactory = new AnimojiDataFactory(0, 0);
+    }
+
+
+    @Override
+    protected void configureFURenderKit() {
+        super.configureFURenderKit();
+        mAnimojiDataFactory.bindCurrentRenderer();
+    }
+
+
+    @Override
+    public void initView() {
+        super.initView();
+        mAnimojiControlView = (AnimojiControlView) mStubView;
+        changeTakePicButtonMargin(getResources().getDimensionPixelSize(R.dimen.x306), getResources().getDimensionPixelSize(R.dimen.x122));
+    }
+
+
+    @Override
+    public void bindListener() {
+        super.bindListener();
+        mAnimojiControlView.bindDataFactory(mAnimojiDataFactory);
+        mAnimojiControlView.setOnBottomAnimatorChangeListener(showRate -> {
+            // 收起 1-->0，弹出 0-->1
+            updateTakePicButton(getResources().getDimensionPixelSize(R.dimen.x166), showRate, getResources().getDimensionPixelSize(R.dimen.x138),
+                    getResources().getDimensionPixelSize(R.dimen.x168), true);
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        mAnimojiDataFactory.releaseAIProcessor();
+        super.onDestroy();
+    }
+
+
+    @Override
+    protected int getFunctionType() {
+        return FunctionEnum.ANIMOJI;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        mAnimojiControlView.hideControlView();
+        return super.onTouchEvent(event);
+    }
+}
